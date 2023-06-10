@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>ASWEB: Auditing System for Word Embeddings Bias</title>
+    <link href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+    <link href="static/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="{{url_for('static', filename='js/jquery-3.7.0.min.js')}}"></script>
+</head>
+<body class="sb-nav-fixed">
+    <div style="visibility:hidden" id="loading">
+        <img id="loading-image" src="static/assets/rocket.gif" alt="Loading..." />
+    </div>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3">ASWEB</a>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu" style="height: 57.5%;">
+                    <div class="nav" style="height: 100%;">
+                        <div class="sb-sidenav-menu-heading">Upload/Compute Word Embeddings</div>
+                        <div style=" overflow-y: auto; height:100%">
+                            <select id="upload" class="select" style="background-color: #343a40; display: block; margin-left: 1rem; color: rgba(255, 255, 255, 0.5); font-family: var(--bs-body-font-family); border: none; ">
+                                <option value="">-- Select option -- </option>
+                                <option value="upload">Upload Word Embeddings</option>
+                                <option value="we">Compute Word Embeddings</option>
+                            </select>
+                            <form id="form_sidebar">
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="sb-sidenav-menu sb-sidenav-wordembeddings">
+                    <div class="nav" style="height: 100%;">
+                        <div class="sb-sidenav-menu-heading">Word Embeddings Loaded</div>
+                        <div id="word_embeddings_loaded" overflow-y: auto; height:100%">
+
+                        </div>
+                    </div>
+                </div>
+                <div style="height:6.5%">
+                    <div class="nav" style="height: 100%;">
+                        <button disabled id="save_word_embedding" class="button-1" role="button"> Save</button>
+                        <button disabled id="delete_word_embedding" class="button-2" role="button"> Delete</button>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Made by:</div>
+                    Samuel Adrados Gonzalez
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h4 class="mt-4">Debiasing Options</h4>
+                    <div class="row" style="margin-bottom:2rem">
+                        <div class="col-xl-3 col-md-6">
+                            <ol class="breadcrumb" style="margin-bottom:5px">
+                                <li class="breadcrumb-item active">Selection of Word Embedding:</li>
+                            </ol>
+                            <select disabled id="select_we" class="select" style="width: 228px; background-color: rgba(13, 110, 253, 0.5); display: block; font-family: var(--bs-body-font-family); border: none; ">
+                                <option value="">-- Select WE -- </option>
+                            </select>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <ol class="breadcrumb" style="margin-bottom:5px">
+                                <li class="breadcrumb-item active">Debiasing Methods:</li>
+                            </ol>
+                            <select disabled id="select_debiasing" class="select" style="background-color: rgba(13, 110, 253, 0.5); display: block; font-family: var(--bs-body-font-family); border: none; ">
+                                <option value="">-- Select method -- </option>
+                                <option value="hard">Hard Debiasing</option>
+                                <option value="soft">Soft Debiasing</option>
+                                <option value="attract">Attract-Repel</option>
+                                <option value="linear">Linear Projection</option>
+                                <option value="double">Double-Hard Debiasing</option>
+                                <option value="nullspace">Iterative Nullspace Projection</option>
+                            </select>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <ol class="breadcrumb" style="margin-bottom:5px">
+                                <li class="breadcrumb-item active">Gender Direction Methods:</li>
+                            </ol>
+                            <select disabled id="select_direction" class="select" style="width: 228px;background-color: rgba(13, 110, 253, 0.5); display: block; font-family: var(--bs-body-font-family); border: none; ">
+                                <option value="">-- Select method -- </option>
+                                <option value="pca">PCA Pairs</option>
+                                <option value="two_means">Two Means</option>
+                                <option value="classification">Classification</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="div_debiasing_options" style="height:150px; overflow-y:auto;">
+
+                    </div>
+                    <div class="nav">
+                        <button disabled id="button_debiasing_options" class="button-3" role="button"> Run</button>
+                    </div>
+                    <h4 class="mt-4">Visualization</h4>
+                    <div id="div_visualization">
+                    </div>
+                    <h4 class="mt-4">Measurements</h4>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-1"></i>
+                            Measurements
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row" style="height:80px">
+                                <div class="col-xl-3 col-md-6">
+                                    <ol class="breadcrumb" style="margin-bottom:5px">
+                                        <li class="breadcrumb-item active">Measurement Methods:</li>
+                                    </ol>
+                                    <select disabled id="select_measurement_method" class="select" style="width: 228px; background-color: rgba(13, 110, 253, 0.5); display: block; font-family: var(--bs-body-font-family); border: none; ">
+                                        <option value="">-- Select method -- </option>
+                                        <option value="indirect">Indirect Bias </option>
+                                        <option value="direct">Direct Bias </option>
+                                        <option value="weat">WEAT </option>
+                                        <option value="neighborhood">Neighborhood Metric </option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <ol class="breadcrumb" style="margin-bottom:5px">
+                                        <li class="breadcrumb-item active">Word Embedding 1:</li>
+                                    </ol>
+                                    <select disabled id="select_we_1" class="select" style="width: 228px; background-color: rgba(13, 110, 253, 0.5); display: block; font-family: var(--bs-body-font-family); border: none; ">
+                                        <option value="">-- Select WE -- </option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <ol class="breadcrumb" style="margin-bottom:5px">
+                                        <li class="breadcrumb-item active">Word Embedding 2:</li>
+                                    </ol>
+                                    <select disabled id="select_we_2" class="select" style="width: 228px; background-color: rgba(13, 110, 253, 0.5); display: block; font-family: var(--bs-body-font-family); border: none; ">
+                                        <option value="">-- Select WE -- </option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="nav">
+                                        <button disabled id="button_measurements" class="button-3" style=" margin: 10px 0px 5px 20px;" role="button"> Measure</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="div_measurements_options"></div>
+                            <table id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Word Embedding 1</th>
+                                        <th>Word Embedding 2</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Word Embedding 1</th>
+                                        <th>Word Embedding 2</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody id="table_body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='js/datatables-simple-demo.js')}}"></script>
+    <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
+
+</body>
+</html>
