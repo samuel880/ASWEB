@@ -45,13 +45,7 @@ function createSVG(data, id, vector_data, direction_name, name) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", -10)
-        .text(name)
-        .attr("text-anchor", "middle")
-        .style("font-size", "20px")
-        .style("font-weight", "bold");
+
 
     var xScale = d3.scaleLinear()
         .domain([-1.15, 1.15])
@@ -85,6 +79,13 @@ function createSVG(data, id, vector_data, direction_name, name) {
         .text(function (d) { return d.label; })
         .style("font-size", "12px");
 
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", -10)
+        .text(name)
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .style("font-weight", "bold");
 
     var xAxis = d3.axisBottom(xScale);
     var yAxis = d3.axisLeft(yScale);
