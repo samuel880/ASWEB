@@ -1807,6 +1807,9 @@ const change_select_measurement_method = (event) => {
         select.addEventListener("change", gender_direction_method_change);
         div.append(select);
         div_measurements_options.appendChild(div);
+        if (button_measurements.disabled == false) {
+            button_measurements.disabled = true;
+        }
 
     } else if (event.target.value == "direct") {
 
@@ -1846,6 +1849,9 @@ const change_select_measurement_method = (event) => {
         select.addEventListener("change", gender_direction_method_change);
         div.append(select);
         div_measurements_options.appendChild(div);
+        if (button_measurements.disabled == false) {
+            button_measurements.disabled = true;
+        }
 
     } else if (event.target.value == "weat") {
 
