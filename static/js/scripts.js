@@ -32,7 +32,7 @@ const dataTable = new simpleDatatables.DataTable(myTable);
 
 
 //Create SVG for visualization
-function createSVG(data, id, vector_data, direction_name, name) {
+function createSVG(data, id, vector_data, direction_name, name, text_ejex, text_ejey) {
 
     var margin = { top: 50, right: 30, bottom: 60, left: 70 };
     var width = 600 - margin.left - margin.right;
@@ -44,7 +44,6 @@ function createSVG(data, id, vector_data, direction_name, name) {
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 
 
     var xScale = d3.scaleLinear()
@@ -106,13 +105,18 @@ function createSVG(data, id, vector_data, direction_name, name) {
         .attr("class", "x-axis-label")
         .attr("x", width / 2)
         .attr("y", height + margin.bottom / 2)
-
+        .text(text_ejex)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px");
 
     svg.append("text")
         .attr("class", "y-axis-label")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)
         .attr("y", -margin.left / 2)
+        .text(text_ejey)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px");
 
 
     var legend = svg.selectAll(".legend")
@@ -169,25 +173,7 @@ function createSVG(data, id, vector_data, direction_name, name) {
                     .style("stroke", "black");
             } else {
 
-                var dx = vector_data[1].x - vector_data[0].x;
-                var dy = vector_data[1].y - vector_data[0].y;
-                var slope = dy / dx;
-                var perpendicularSlope = -1 / slope;
 
-
-                var startX = vector_data[0].x - 0.5;
-                var startY = vector_data[0].y - 0.5 * perpendicularSlope;
-                var endX = vector_data[0].x + 0.5;
-                var endY = vector_data[0].y + 0.5 * perpendicularSlope;
-
-                svg.append("line")
-                    .attr("class", "line-dotted")
-                    .attr("x1", xScale(startX))
-                    .attr("y1", yScale(startY))
-                    .attr("x2", xScale(endX))
-                    .attr("y2", yScale(endY))
-                    .style("stroke-dasharray", "3,3")
-                    .style("stroke", "black");
             }
         } else {
             svg.append("circle")
@@ -336,7 +322,7 @@ function create_visualization(data, name, type) {
         }
 
 
-        createSVG(dataSVG, "visualization_1", vectorDataSVG, "gender_direction", name);
+        createSVG(dataSVG, "visualization_1", vectorDataSVG, "gender_direction", name, "PCA's First Component", "PCA's Second Component");
 
 
         var dataSVG = [];
@@ -354,7 +340,7 @@ function create_visualization(data, name, type) {
         for (var word in data[1]['gender_direction']) {
             vectorDataSVG.push({ x: data[1]['gender_direction'][word]['x'], y: data[1]['gender_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_2", vectorDataSVG, "gender_direction", name);
+        createSVG(dataSVG, "visualization_2", vectorDataSVG, "gender_direction", name, "Gender Direction (cosine similarity)", "PCA's First Component");
 
 
 
@@ -374,7 +360,7 @@ function create_visualization(data, name, type) {
         for (var word in data[2]['gender_direction']) {
             vectorDataSVG.push({ x: data[2]['gender_direction'][word]['x'], y: data[2]['gender_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_3", vectorDataSVG, "gender_direction", name);
+        createSVG(dataSVG, "visualization_3", vectorDataSVG, "gender_direction", name, "Gender Direction (cosine similarity)", "PCA's First Component");
 
 
 
@@ -393,7 +379,7 @@ function create_visualization(data, name, type) {
         for (var word in data[3]['gender_direction']) {
             vectorDataSVG.push({ x: data[3]['gender_direction'][word]['x'], y: data[3]['gender_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_4", vectorDataSVG, "gender_direction", name);
+        createSVG(dataSVG, "visualization_4", vectorDataSVG, "gender_direction", name, "PCA's First Component", "PCA's Second Component");
 
 
     } else if (type == 'attract' || type == 'nullspace') {
@@ -462,7 +448,7 @@ function create_visualization(data, name, type) {
 
 
 
-        createSVG(dataSVG, "visualization_1", null, null, name);
+        createSVG(dataSVG, "visualization_1", null, null, name, "PCA's First Component", "PCA's Second Component");
 
 
         var dataSVG = [];
@@ -477,7 +463,7 @@ function create_visualization(data, name, type) {
         }
 
 
-        createSVG(dataSVG, "visualization_2", null, null, name);
+        createSVG(dataSVG, "visualization_2", null, null, name, "PCA's First Component", "PCA's Second Component");
 
 
 
@@ -656,7 +642,7 @@ function create_visualization(data, name, type) {
         for (var word in data[0]['frequency_direction']) {
             vectorDataSVG.push({ x: data[0]['frequency_direction'][word]['x'], y: data[0]['frequency_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_1", vectorDataSVG, "frequency_direction", name);
+        createSVG(dataSVG, "visualization_1", vectorDataSVG, "frequency_direction", name, "PCA's First Component", "PCA's Second Component");
 
 
 
@@ -675,7 +661,7 @@ function create_visualization(data, name, type) {
         for (var word in data[1]['frequency_direction']) {
             vectorDataSVG.push({ x: data[1]['frequency_direction'][word]['x'], y: data[1]['frequency_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_2", vectorDataSVG, "frequency_direction", name);
+        createSVG(dataSVG, "visualization_2", vectorDataSVG, "frequency_direction", name, "Frequency Direction (cosine similarity)", "PCA's First Component");
 
 
 
@@ -694,7 +680,7 @@ function create_visualization(data, name, type) {
         for (var word in data[2]['frequency_direction']) {
             vectorDataSVG.push({ x: data[2]['frequency_direction'][word]['x'], y: data[2]['frequency_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_3", vectorDataSVG, "frequency_direction", name);
+        createSVG(dataSVG, "visualization_3", vectorDataSVG, "frequency_direction", name, "Frequency Direction (cosine similarity)", "PCA's First Component");
 
 
 
@@ -714,7 +700,7 @@ function create_visualization(data, name, type) {
         for (var word in data[3]['gender_direction']) {
             vectorDataSVG.push({ x: data[3]['gender_direction'][word]['x'], y: data[3]['gender_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_4", vectorDataSVG, "gender_direction", name);
+        createSVG(dataSVG, "visualization_4", vectorDataSVG, "gender_direction", name, "Gender Direction (cosine similarity)", "PCA's First Component");
 
 
 
@@ -733,7 +719,7 @@ function create_visualization(data, name, type) {
         for (var word in data[4]['gender_direction']) {
             vectorDataSVG.push({ x: data[4]['gender_direction'][word]['x'], y: data[4]['gender_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_5", vectorDataSVG, "gender_direction", name);
+        createSVG(dataSVG, "visualization_5", vectorDataSVG, "gender_direction", name, "Gender Direction (cosine similarity)", "PCA's First Component");
 
 
         var dataSVG = [];
@@ -751,7 +737,7 @@ function create_visualization(data, name, type) {
         for (var word in data[5]['gender_direction']) {
             vectorDataSVG.push({ x: data[5]['gender_direction'][word]['x'], y: data[5]['gender_direction'][word]['y'] });
         }
-        createSVG(dataSVG, "visualization_6", vectorDataSVG, "gender_direction", name);
+        createSVG(dataSVG, "visualization_6", vectorDataSVG, "gender_direction", name, "PCA's First Component", "PCA's Second Component");
     }
 }
 
@@ -1368,7 +1354,7 @@ const change_select_direction = (event) => {
             input.style.cssText = "margin-left: 5px; margin-right: 20px; width: 500px; background-color: rgb(133 182 254); color: rgb(33 37 41); border: none;";
             input.defaultValue = "math, algebra, geometry, calculus, equations, computation, numbers, addition, poetry, art, dance, literature, novel, symphony, drama, sculpture";
             div.appendChild(input);
-            div.innerHTML += "Landa: ";
+            div.innerHTML += "Lambda: ";
             var input = document.createElement("input");
             input.id = "landa";
             input.type = "number";
@@ -1548,7 +1534,7 @@ const change_select_direction = (event) => {
             input.style.cssText = "margin-left: 5px; margin-right: 20px; width: 500px; background-color: rgb(133 182 254); color: rgb(33 37 41); border: none;";
             input.defaultValue = "math, algebra, geometry, calculus, equations, computation, numbers, addition, poetry, art, dance, literature, novel, symphony, drama, sculpture";
             div.appendChild(input);
-            div.innerHTML += "Landa: ";
+            div.innerHTML += "Lambda: ";
             var input = document.createElement("input");
             input.id = "landa";
             input.type = "number";
