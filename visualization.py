@@ -107,7 +107,7 @@ def reduction_embeddings_to_2d_gender_direction_x(we, masc_words, fem_words, neu
     #x axis as the similarity with gender_direction
     x_component=np.expand_dims(np.dot(X_fem,gender_direction),1)
     
-    #Remove gender direction of masc words (same as PCA) and transform with PCA into 2d
+    #Remove gender direction of fem words (same as PCA) and transform with PCA into 2d
     debiased_X_fem=X_fem - np.dot(X_fem,gender_direction.reshape(-1,1))*gender_direction
     y_component=np.expand_dims(projector.transform(debiased_X_fem)[:, 0], 1)
    
@@ -121,7 +121,7 @@ def reduction_embeddings_to_2d_gender_direction_x(we, masc_words, fem_words, neu
     #x axis as the similarity with gender_direction
     x_component=np.expand_dims(np.dot(X_neutral,gender_direction),1)
     
-    #Remove gender direction of masc words (same as PCA) and transform with PCA into 2d
+    #Remove gender direction of neutral words (same as PCA) and transform with PCA into 2d
     debiased_X_neutral=X_neutral - np.dot(X_neutral,gender_direction.reshape(-1,1))*gender_direction
     y_component=np.expand_dims(projector.transform(debiased_X_neutral)[:, 0], 1)
    
